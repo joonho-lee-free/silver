@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+
+  /* ✅ 모바일 하단 고정 CTA 높이만큼 여백 확보 */
+  padding-bottom: 70px;
+}
+
+/* =========================
+   Mobile Fixed CTA
+========================= */
+.mobile-cta {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  z-index: 9999;
+  display: flex;
+  gap: 8px;
+
+  padding: 10px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* 버튼 공통 */
+.mobile-cta .cta-btn {
+  flex: 1;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+/* 전화 버튼 */
+.mobile-cta .call {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+/* 문자 버튼 */
+.mobile-cta .sms {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* PC에서는 숨김 */
+@media (min-width: 768px) {
+  .mobile-cta {
+    display: none;
+  }
+}
