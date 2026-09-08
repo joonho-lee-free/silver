@@ -244,7 +244,7 @@ export default function RecipientsPage() {
         <div>
           <div className="flex items-center space-x-2 text-emerald-600 font-semibold text-xs tracking-wider uppercase mb-1">
             <Users className="w-4 h-4" />
-            <span>EasyCare 수급자 관리 모듈</span>
+            <span>Silver Link 수급자 관리 모듈</span>
           </div>
           <h1 className="text-2xl font-extrabold text-slate-900">
             수급자 및 공단 서류 관리

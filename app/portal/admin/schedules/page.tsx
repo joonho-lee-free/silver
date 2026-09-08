@@ -227,7 +227,7 @@ export default function SchedulesPage() {
         <div>
           <div className="flex items-center space-x-2 text-blue-600 font-semibold text-xs tracking-wider uppercase mb-1">
             <CalendarIcon className="w-4 h-4" />
-            <span>EasyCare 일정 관리 모듈</span>
+            <span>Silver Link 일정 관리 모듈</span>
           </div>
           <h1 className="text-2xl font-extrabold text-slate-900">
             방문 일정 배정 캘린더

@@ -12,7 +12,7 @@ export default function PortalDashboard() {
           <div className="space-y-2">
             <div className="inline-flex items-center space-x-2 bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs px-3 py-1 rounded-full font-medium">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>이지케어(EasyCare) 급여 관리 ERP 모듈</span>
+              <span>실버링크(Silver Link) 급여 관리 ERP 모듈</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
               장기요양기관 업무 통합 포털

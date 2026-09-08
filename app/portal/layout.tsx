@@ -76,12 +76,12 @@ export default function PortalLayout({
             <div className="flex items-center space-x-3">
               <Link href="/portal" className="flex items-center space-x-2 group">
                 <div className="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-white shadow-lg group-hover:bg-emerald-400 transition">
-                  EC
+                  SL
                 </div>
                 <div>
-                  <span className="text-lg font-bold tracking-tight text-white">이지케어 ERP</span>
+                  <span className="text-lg font-bold tracking-tight text-white">실버링크 ERP</span>
                   <span className="ml-2 text-xs bg-slate-800 text-emerald-400 px-2 py-0.5 rounded font-mono border border-slate-700">
-                    SeniorCare v1.4
+                    SilverLink v1.4
                   </span>
                 </div>
               </Link>
@@ -183,7 +183,7 @@ export default function PortalLayout({
 
       {/* Footer */}
       <footer className="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
-        이지케어(EasyCare) 급여제공 모방 ERP 모듈 · Next.js 14 & Firebase Firestore Integrated
+        실버링크(Silver Link) 급여제공 ERP 모듈 · Next.js 14 & Firebase Firestore Integrated
       </footer>
     </div>
   );
