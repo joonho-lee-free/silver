@@ -2,6 +2,17 @@ export type CareLevel = "1등급" | "2등급" | "3등급" | "4등급" | "5등급
 
 export type CoPayRate = 15 | 9 | 6 | 0; // 15% (일반), 9% (감경 40%), 6% (감경 60%), 0% (기초수급)
 
+export type UserRole = "admin" | "caregiver";
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  centerName?: string;
+  phone?: string;
+}
+
 export interface Recipient {
   id: string;
   name: string;

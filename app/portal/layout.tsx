@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Calendar, Users, FileCheck, Shield, ChevronRight, Menu, X, Database } from "@/lib/icons";
+import { Calendar, Users, FileCheck, Shield, ChevronRight, Menu, X, Database, LogIn, LogOut, User as UserIcon } from "@/lib/icons";
 import { seedInitialErpData } from "@/lib/firebaseErp";
+import { UserProfile } from "@/lib/types/erp";
 
 export default function PortalLayout({
   children,
@@ -12,9 +13,43 @@ export default function PortalLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
   const [seedMessage, setSeedMessage] = useState<string | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
+
+  // Load User Session from localStorage
+  const loadUserSession = () => {
+    try {
+      const stored = localStorage.getItem("silverlink_user");
+      if (stored) {
+        setUser(JSON.parse(stored));
+      } else {
+        setUser(null);
+      }
+    } catch (e) {
+      console.error(e);
+      setUser(null);
+    }
+  };
+
+  useEffect(() => {
+    loadUserSession();
+    const handleAuthChange = () => loadUserSession();
+    window.addEventListener("silverlink_auth_change", handleAuthChange);
+    return () => {
+      window.removeEventListener("silverlink_auth_change", handleAuthChange);
+    };
+  }, []);
+
+  // Logout Handler
+  const handleLogout = () => {
+    localStorage.removeItem("silverlink_user");
+    setUser(null);
+    window.dispatchEvent(new Event("silverlink_auth_change"));
+    router.push("/portal/login");
+  };
 
   // Auto-hide public MobileCTA on portal pages
   useEffect(() => {
@@ -118,16 +153,46 @@ export default function PortalLayout({
               })}
             </nav>
 
-            {/* Actions: Seed sample data & Mobile menu toggle */}
+            {/* User Session Status & Actions */}
             <div className="flex items-center space-x-2">
+              {/* User Profile Badge */}
+              {user ? (
+                <div className="hidden sm:flex items-center space-x-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-xs">
+                  <UserIcon className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="font-bold text-slate-200">{user.name}</span>
+                  <span className={`px-1.5 py-0.2 text-[10px] rounded font-semibold ${
+                    user.role === "admin" ? "bg-blue-900 text-blue-200" : "bg-indigo-900 text-indigo-200"
+                  }`}>
+                    {user.role === "admin" ? "어드민" : "요양보호사"}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="ml-2 text-slate-400 hover:text-red-400 font-medium border-l border-slate-700 pl-2 transition cursor-pointer"
+                    title="로그아웃"
+                  >
+                    <LogOut className="w-3.5 h-3.5 inline mr-1" />
+                    로그아웃
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  href="/portal/login"
+                  className="flex items-center space-x-1 text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-3 py-1.5 rounded-lg transition shadow"
+                >
+                  <LogIn className="w-3.5 h-3.5" />
+                  <span>로그인</span>
+                </Link>
+              )}
+
+              {/* Seed Sample Data Button */}
               <button
                 onClick={handleSeedData}
                 disabled={isSeeding}
                 title="초기 테스트 샘플 데이터 생성/복구"
-                className="flex items-center space-x-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg transition disabled:opacity-50 cursor-pointer"
+                className="hidden lg:flex items-center space-x-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg transition disabled:opacity-50 cursor-pointer"
               >
                 <Database className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{isSeeding ? "생성중..." : "샘플 데이터 초기화"}</span>
+                <span>{isSeeding ? "생성중..." : "샘플 초기화"}</span>
               </button>
 
               <button
@@ -142,7 +207,35 @@ export default function PortalLayout({
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-800 bg-slate-900 px-4 pt-2 pb-4 space-y-1 shadow-2xl">
+          <div className="md:hidden border-t border-slate-800 bg-slate-900 px-4 pt-2 pb-4 space-y-2 shadow-2xl">
+            {/* Mobile User Info */}
+            {user ? (
+              <div className="flex items-center justify-between p-3 bg-slate-800 rounded-xl text-xs text-slate-200 mb-2">
+                <div className="flex items-center space-x-2">
+                  <UserIcon className="w-4 h-4 text-emerald-400" />
+                  <div>
+                    <div className="font-bold">{user.name}</div>
+                    <div className="text-[10px] text-slate-400">{user.email}</div>
+                  </div>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="px-2.5 py-1 bg-red-950 text-red-300 border border-red-800/50 rounded font-semibold"
+                >
+                  로그아웃
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/portal/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center space-x-2 w-full py-2.5 bg-emerald-600 text-white text-sm font-bold rounded-xl mb-2"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>로그인 페이지로 이동</span>
+              </Link>
+            )}
+
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
