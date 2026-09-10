@@ -324,6 +324,59 @@ export async function seedInitialErpData(): Promise<{ recipientsCount: number; c
     }
   }
 
+  // Sample SVG placeholder photo for care logs
+  const samplePhotoSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200"><rect width="300" height="200" fill="%23e2e8f0"/><circle cx="150" cy="80" r="35" fill="%2394a3b8"/><path d="M70 170 C70 130, 230 130, 230 170 Z" fill="%2394a3b8"/><text x="150" y="190" font-family="sans-serif" font-size="12" font-weight="bold" fill="%23475569" text-anchor="middle">현장 방문 케어 촬영 사진</text></svg>`;
+
+  // Sample Care Logs for current month
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth();
+  const sampleLogDates = [2, 4, 5, 7, 9, 10, 12, 14, 15, 16, 18, 20, 22, 23, 25];
+
+  for (const dayNum of sampleLogDates) {
+    const logDateObj = new Date(currentYear, currentMonth, dayNum);
+    const logDateStr = logDateObj.toISOString().split("T")[0];
+
+    // Hong Gil-dong care log
+    if (recipientIds["홍길동 어르신"] && caregiverIds["김영희 요양보호사"]) {
+      await addCareLog({
+        scheduleId: "sample-sched-01",
+        recipientId: recipientIds["홍길동 어르신"],
+        recipientName: "홍길동 어르신",
+        caregiverId: caregiverIds["김영희 요양보호사"],
+        caregiverName: "김영희 요양보호사",
+        logDate: logDateStr,
+        startTime: "09:00",
+        endTime: "12:00",
+        mealStatus: dayNum % 3 === 0 ? "반 이상 섭취" : "전부 섭취",
+        medicationStatus: "완료",
+        physicalActivity: ["세면도움", "식사도움", "신체기능유지"],
+        photoUrl: dayNum % 2 === 0 ? samplePhotoSvg : undefined,
+        notes: dayNum % 4 === 0 ? "아침 식사 잘 하셨으며 혈압 측정치 120/80으로 정상. 가벼운 실내 산책 수행함." : "약 복용 확인 완료. 기분도 밝으시고 컨디션 매우 양호하십니다.",
+        createdAt: new Date().toISOString(),
+      });
+    }
+
+    // Kim Soon-ok care log
+    if (recipientIds["김순옥 어르신"] && caregiverIds["박철수 요양보호사"]) {
+      await addCareLog({
+        scheduleId: "sample-sched-02",
+        recipientId: recipientIds["김순옥 어르신"],
+        recipientName: "김순옥 어르신",
+        caregiverId: caregiverIds["박철수 요양보호사"],
+        caregiverName: "박철수 요양보호사",
+        logDate: logDateStr,
+        startTime: "10:00",
+        endTime: "13:00",
+        mealStatus: "전부 섭취",
+        medicationStatus: "완료",
+        physicalActivity: ["몸청결", "외출동행", "배설도움"],
+        photoUrl: dayNum % 3 === 0 ? samplePhotoSvg : undefined,
+        notes: "당뇨 약 섭취 확인 완료. 발 마사지 및 체위 변경 보조 지원함.",
+        createdAt: new Date().toISOString(),
+      });
+    }
+  }
+
   return {
     recipientsCount: sampleRecipients.length,
     caregiversCount: sampleCaregivers.length,

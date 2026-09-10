@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Calendar, Users, FileCheck, ShieldAlert, Clock, ChevronRight } from "@/lib/icons";
+import { Calendar, Users, FileCheck, ShieldAlert, Clock, ChevronRight, Heart, Printer } from "@/lib/icons";
 
 export default function PortalDashboard() {
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
+    <div className="space-y-6 max-w-6xl mx-auto">
       {/* Welcome Hero */}
       <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 rounded-2xl p-6 sm:p-8 text-white shadow-xl">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -18,7 +18,7 @@ export default function PortalDashboard() {
               장기요양기관 업무 통합 포털
             </h1>
             <p className="text-slate-300 text-sm max-w-xl leading-relaxed">
-              수급자 등급 서류 관리부터 요양보호사 방문 일정 배정, 모바일 급여제공기록지 작성까지 간편하고 정확하게 관리하세요.
+              수급자 등급 서류 관리부터 요양보호사 방문 일정 배정, 모바일 급여제공기록지 작성, 자녀-요양보호사 동시 열람 및 인쇄 전용 월간 일지 달력까지 통합 지원합니다.
             </p>
           </div>
 
@@ -110,6 +110,60 @@ export default function PortalDashboard() {
           </div>
           <div className="flex items-center text-sm font-semibold text-indigo-600 group-hover:translate-x-1 transition-transform">
             <span>기록 폼 작성하기</span>
+            <ChevronRight className="w-4 h-4 ml-1" />
+          </div>
+        </Link>
+
+        {/* Task 4: Family Monthly Care Calendar */}
+        <Link
+          href="/portal/family/calendar"
+          className="group bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-rose-300 transition-all flex flex-col justify-between"
+        >
+          <div>
+            <div className="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <Heart className="w-6 h-6" />
+            </div>
+            <div className="flex items-center space-x-2 mb-1">
+              <span className="text-xs font-semibold text-rose-600 uppercase tracking-wider">Family</span>
+              <span className="text-slate-300">·</span>
+              <span className="text-xs text-slate-500">보호자 뷰어</span>
+            </div>
+            <h2 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-rose-600 transition">
+              자녀 전용 케어 달력
+            </h2>
+            <p className="text-slate-600 text-sm leading-relaxed mb-4">
+              우리 부모님의 월간 케어 일지, 식사·복약 현황 및 담당 요양보호사의 현장 케어 사진을 캘린더로 열람하고 A4 인쇄합니다.
+            </p>
+          </div>
+          <div className="flex items-center text-sm font-semibold text-rose-600 group-hover:translate-x-1 transition-transform">
+            <span>보호자 달력 보기</span>
+            <ChevronRight className="w-4 h-4 ml-1" />
+          </div>
+        </Link>
+
+        {/* Task 5: Admin Print Center */}
+        <Link
+          href="/portal/admin/print-calendar"
+          className="group bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-purple-300 transition-all flex flex-col justify-between"
+        >
+          <div>
+            <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <Printer className="w-6 h-6" />
+            </div>
+            <div className="flex items-center space-x-2 mb-1">
+              <span className="text-xs font-semibold text-purple-600 uppercase tracking-wider">Admin</span>
+              <span className="text-slate-300">·</span>
+              <span className="text-xs text-slate-500">공단/출력 센터</span>
+            </div>
+            <h2 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-purple-600 transition">
+              월간 일지 인쇄 센터
+            </h2>
+            <p className="text-slate-600 text-sm leading-relaxed mb-4">
+              공단 제출용 및 보관용 어르신별 월간 케어 일지 달력을 A4 가로(Landscape) 규격으로 일괄 인쇄 출력합니다.
+            </p>
+          </div>
+          <div className="flex items-center text-sm font-semibold text-purple-600 group-hover:translate-x-1 transition-transform">
+            <span>인쇄 센터 이동</span>
             <ChevronRight className="w-4 h-4 ml-1" />
           </div>
         </Link>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Calendar, Users, FileCheck, Shield, ChevronRight, Menu, X, Database, LogIn, LogOut, User as UserIcon } from "@/lib/icons";
+import { Calendar, Users, FileCheck, Shield, ChevronRight, Menu, X, Database, LogIn, LogOut, User as UserIcon, Printer, Heart } from "@/lib/icons";
 import { seedInitialErpData } from "@/lib/firebaseErp";
 import { UserProfile } from "@/lib/types/erp";
 
@@ -79,25 +79,39 @@ export default function PortalLayout({
 
   const navItems = [
     {
-      label: "일정 배정 캘린더",
+      label: "일정 배정",
       href: "/portal/admin/schedules",
       icon: Calendar,
       role: "어드민",
       color: "text-blue-600",
     },
     {
-      label: "수급자 및 공단 서류",
+      label: "수급자 서류",
       href: "/portal/admin/recipients",
       icon: Users,
       role: "어드민",
       color: "text-emerald-600",
     },
     {
-      label: "모바일 급여제공기록지",
+      label: "급여제공기록지",
       href: "/portal/caregiver/record",
       icon: FileCheck,
       role: "요양보호사",
       color: "text-indigo-600",
+    },
+    {
+      label: "자녀 케어달력",
+      href: "/portal/family/calendar",
+      icon: Heart,
+      role: "보호자",
+      color: "text-rose-500",
+    },
+    {
+      label: "월간 인쇄",
+      href: "/portal/admin/print-calendar",
+      icon: Printer,
+      role: "출력/공단",
+      color: "text-purple-600",
     },
   ];
 
