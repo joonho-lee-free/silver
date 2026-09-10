@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Recipient, CareLog, Schedule } from "@/lib/types/erp";
 import { Printer, ChevronLeft, ChevronRight, Heart, User, Calendar as CalendarIcon, CheckCircle2, Shield } from "@/lib/icons";
+import CareDetailModal from "@/components/CareDetailModal";
 
 export interface ExtendedCareLog extends CareLog {
   mealMenu?: string;
@@ -30,6 +31,11 @@ export default function PrintableCareCalendar({
   onMonthChange,
   showControls = true,
 }: PrintableCareCalendarProps) {
+  // Modal State for Trade Statement Invoice
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedDateStr, setSelectedDateStr] = useState<string>("");
+  const [selectedCareLog, setSelectedCareLog] = useState<ExtendedCareLog | null>(null);
+
   // Calendar Grid Calculation
   const calendarDays = useMemo(() => {
     const firstDay = new Date(year, month - 1, 1).getDay(); // 0=Sun, 1=Mon...
@@ -66,6 +72,13 @@ export default function PrintableCareCalendar({
     });
     return map;
   }, [careLogs]);
+
+  // Cell Click Handler to Open Trade Statement Invoice Modal
+  const handleCellClick = (dateStr: string, log: ExtendedCareLog | null) => {
+    setSelectedDateStr(dateStr);
+    setSelectedCareLog(log);
+    setModalOpen(true);
+  };
 
   // Handle Prev/Next Month
   const handlePrevMonth = () => {
@@ -170,7 +183,7 @@ export default function PrintableCareCalendar({
                 <span>{year}년 {month}월 케어·발주 월간 일지</span>
               </h2>
               <p className="text-xs text-slate-500 font-medium mt-0.5">
-                {recipient ? `${recipient.name} 어르신 (장기요양 ${recipient.careLevel})` : "수급자 정보"}
+                💡 날짜 셀을 클릭하시면 해당 일자의 <strong className="text-emerald-700">거래명세표형 일일 케어 리포트 팝업</strong>을 열람할 수 있습니다.
               </p>
             </div>
 
@@ -271,7 +284,9 @@ export default function PrintableCareCalendar({
                 return (
                   <div
                     key={item.dateStr}
-                    className="print-grid-cell bg-white min-h-[130px] p-2 flex flex-col justify-between hover:bg-slate-50/90 transition"
+                    onClick={() => handleCellClick(item.dateStr, primaryLog)}
+                    className="print-grid-cell bg-white min-h-[130px] p-2 flex flex-col justify-between cursor-pointer hover:bg-emerald-50/80 hover:border-emerald-500 transition group shadow-2xs relative"
+                    title="클릭 시 일일 거래명세표형 상세 팝업 열람"
                   >
                     {/* Date Number Header */}
                     <div className="flex items-center justify-between border-b border-slate-100 pb-1 mb-1">
@@ -288,7 +303,7 @@ export default function PrintableCareCalendar({
                       </span>
 
                       {primaryLog && (
-                        <span className="text-[9px] font-bold bg-slate-100 text-slate-600 px-1 py-0.2 rounded font-mono">
+                        <span className="text-[9px] font-bold bg-slate-100 group-hover:bg-emerald-100 group-hover:text-emerald-900 text-slate-600 px-1 py-0.2 rounded font-mono transition">
                           {primaryLog.caregiverName.split(" ")[0]}
                         </span>
                       )}
@@ -319,7 +334,7 @@ export default function PrintableCareCalendar({
 
                           {/* Meal Menu Subtext */}
                           {primaryLog.mealMenu && (
-                            <div className="text-[9.5px] font-semibold text-slate-700 truncate leading-tight">
+                            <div className="text-[9.5px] font-semibold text-slate-700 truncate leading-tight group-hover:text-emerald-900">
                               🍚 {primaryLog.mealMenu}
                             </div>
                           )}
@@ -331,7 +346,7 @@ export default function PrintableCareCalendar({
                             <img
                               src={primaryLog.photoUrl}
                               alt="현장 케어 사진"
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover group-hover:scale-105 transition"
                             />
                           </div>
                         ) : (
@@ -342,14 +357,17 @@ export default function PrintableCareCalendar({
 
                         {/* Special Notes (1-2 line ellipsis) */}
                         {primaryLog.notes && (
-                          <p className="text-[10px] leading-tight text-slate-700 line-clamp-2 font-sans bg-slate-50 p-1 rounded border border-slate-100">
+                          <p className="text-[10px] leading-tight text-slate-700 line-clamp-2 font-sans bg-slate-50 group-hover:bg-white p-1 rounded border border-slate-100 transition">
                             💬 {primaryLog.notes}
                           </p>
                         )}
                       </div>
                     ) : (
-                      <div className="flex-1 flex items-center justify-center text-[10px] text-slate-300 italic">
-                        -
+                      <div className="flex-1 flex flex-col items-center justify-center text-[10px] text-slate-300 italic">
+                        <span>-</span>
+                        <span className="text-[8.5px] text-slate-400 opacity-0 group-hover:opacity-100 transition font-sans">
+                          클릭하여 명세서 열람
+                        </span>
                       </div>
                     )}
                   </div>
@@ -370,6 +388,16 @@ export default function PrintableCareCalendar({
           </div>
         </div>
       </div>
+
+      {/* Trade Statement Invoice Modal Popup */}
+      <CareDetailModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        dateStr={selectedDateStr}
+        recipient={recipient}
+        careLog={selectedCareLog}
+        caregiverName={caregiverName}
+      />
     </div>
   );
 }
